@@ -21,6 +21,10 @@ public class Game : BaseEntity
 
     [Column("price")]
     public decimal Price { get; set; }
+    [Column("developer_id")]
+    public int DeveloperId { get; set; }
+    [ForeignKey("DeveloperId")]
+    public User Developer { get; set; } = null!;
 
     [Column("release_date")]
     public DateTime ReleaseDate { get; set; }

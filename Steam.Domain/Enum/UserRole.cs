@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Steam.Domain.Model;
+namespace Steam.Domain.Enum;
 
-public class GameMedia
+public enum UserRole
 {
-
+    User,
+    Admin
 }
