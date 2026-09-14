@@ -11,10 +11,10 @@ public class UserGame
     public int UserId { get; set; }
     [ForeignKey("UserId")]
     public User User { get; set; } = null!;
-    [Column("achievement_id")]
-    public int AchievementId { get; set; }
-    [ForeignKey("AchievementId")]
-    public Achievement Achievement { get; set; } = null!;
+    [Column("game_id")]
+    public int GameId { get; set; }
+    [ForeignKey("GameId")]
+    public Game Game { get; set; } = null!;
     [Column("purchased_at")]
     public DateTime PurchasedAt { get; set; }
     [Column("playtime")]
