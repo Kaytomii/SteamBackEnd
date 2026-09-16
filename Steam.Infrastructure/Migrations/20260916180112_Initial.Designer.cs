@@ -12,7 +12,7 @@ using Steam.Infrastructure.Data;
 namespace Steam.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamDbContext))]
-    [Migration("20260916173704_Initial")]
+    [Migration("20260916180112_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

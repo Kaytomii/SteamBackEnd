@@ -23,9 +23,11 @@ namespace Steam.Api
             {
                 var db = scope.ServiceProvider.GetRequiredService<SteamDbContext>();
 
-                DbInitializer.InitializeAsync(db).GetAwaiter().GetResult();
+                await db.Database.MigrateAsync();
+                await DbInitializer.InitializeAsync(db);
             }
 
+            await app.RunAsync();
         }
     }
 }
