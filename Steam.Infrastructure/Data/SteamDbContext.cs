@@ -63,7 +63,11 @@ namespace Steam.Infrastructure.Data
                 .HasKey(x => new { x.UserId, x.AchievementId });
             modelBuilder.Entity<UserGame>()
                 .HasKey(x => new { x.UserId, x.GameId });
-
+            modelBuilder.Entity<Game>(entity =>
+            {
+                entity.Property(p => p.Price)
+                      .HasColumnType("decimal(18,2)");
+            });
         }
     }
 }

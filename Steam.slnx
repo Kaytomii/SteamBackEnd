@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Steam.Api/Steam.Api.csproj" />
   <Project Path="Steam.Domain/Steam.Domain.csproj" />
+  <Project Path="Steam.Infrastructure/Steam.Infrastructure.csproj" />
 </Solution>
