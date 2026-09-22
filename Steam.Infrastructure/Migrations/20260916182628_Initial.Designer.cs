@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Steam.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Steam.Infrastructure.Data;
 namespace Steam.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamDbContext))]
-    partial class SteamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260916182628_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,43 +208,6 @@ namespace Steam.Infrastructure.Migrations
                     b.ToTable("Medias");
                 });
 
-            modelBuilder.Entity("Steam.Domain.Model.RefreshToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("expires_at");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_revoked");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("token");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("Steam.Domain.Model.SystemRequirements", b =>
                 {
                     b.Property<int>("Id")
@@ -354,14 +320,6 @@ namespace Steam.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("email");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_active");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_verified");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -501,17 +459,6 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("Steam.Domain.Model.RefreshToken", b =>
-                {
-                    b.HasOne("Steam.Domain.Model.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Steam.Domain.Model.SystemRequirements", b =>
                 {
                     b.HasOne("Steam.Domain.Model.Game", "Game")
@@ -609,8 +556,6 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.User", b =>
                 {
                     b.Navigation("DevelopedGames");
-
-                    b.Navigation("RefreshTokens");
 
                     b.Navigation("UserAchievements");
 

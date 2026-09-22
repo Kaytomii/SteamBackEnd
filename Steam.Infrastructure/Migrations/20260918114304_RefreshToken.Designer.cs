@@ -12,8 +12,8 @@ using Steam.Infrastructure.Data;
 namespace Steam.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamDbContext))]
-    [Migration("20260916180112_Initial")]
-    partial class Initial
+    [Migration("20260918114304_RefreshToken")]
+    partial class RefreshToken
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,8 +47,9 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("game_id");
 
-                    b.Property<int>("IconId")
-                        .HasColumnType("int");
+                    b.Property<int?>("IconId")
+                        .HasColumnType("int")
+                        .HasColumnName("icon_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -207,6 +208,43 @@ namespace Steam.Infrastructure.Migrations
                     b.ToTable("Medias");
                 });
 
+            modelBuilder.Entity("Steam.Domain.Model.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("expires_at");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_revoked");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("token");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Steam.Domain.Model.SystemRequirements", b =>
                 {
                     b.Property<int>("Id")
@@ -302,8 +340,9 @@ namespace Steam.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AvatarId")
-                        .HasColumnType("int");
+                    b.Property<int?>("AvatarId")
+                        .HasColumnType("int")
+                        .HasColumnName("avatar_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -318,6 +357,14 @@ namespace Steam.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("email");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_verified");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -399,10 +446,9 @@ namespace Steam.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Steam.Domain.Model.Media", "Icon")
-                        .WithMany()
+                        .WithMany("AchievementIcons")
                         .HasForeignKey("IconId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Game");
 
@@ -412,9 +458,9 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.Game", b =>
                 {
                     b.HasOne("Steam.Domain.Model.User", "Developer")
-                        .WithMany()
+                        .WithMany("DevelopedGames")
                         .HasForeignKey("DeveloperId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Developer");
@@ -458,6 +504,17 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("Steam.Domain.Model.RefreshToken", b =>
+                {
+                    b.HasOne("Steam.Domain.Model.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Steam.Domain.Model.SystemRequirements", b =>
                 {
                     b.HasOne("Steam.Domain.Model.Game", "Game")
@@ -472,10 +529,9 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.User", b =>
                 {
                     b.HasOne("Steam.Domain.Model.Media", "Avatar")
-                        .WithMany()
+                        .WithMany("AvatarUsers")
                         .HasForeignKey("AvatarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Avatar");
                 });
@@ -483,7 +539,7 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.UserAchievement", b =>
                 {
                     b.HasOne("Steam.Domain.Model.Achievement", "Achievement")
-                        .WithMany()
+                        .WithMany("UserAchievements")
                         .HasForeignKey("AchievementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -502,7 +558,7 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.UserGame", b =>
                 {
                     b.HasOne("Steam.Domain.Model.Game", "Game")
-                        .WithMany()
+                        .WithMany("UserGames")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -518,6 +574,11 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Steam.Domain.Model.Achievement", b =>
+                {
+                    b.Navigation("UserAchievements");
+                });
+
             modelBuilder.Entity("Steam.Domain.Model.Game", b =>
                 {
                     b.Navigation("Achievements");
@@ -527,11 +588,20 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("GameTags");
 
                     b.Navigation("SystemRequirements");
+
+                    b.Navigation("UserGames");
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.Genre", b =>
                 {
                     b.Navigation("GameGenres");
+                });
+
+            modelBuilder.Entity("Steam.Domain.Model.Media", b =>
+                {
+                    b.Navigation("AchievementIcons");
+
+                    b.Navigation("AvatarUsers");
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.Tag", b =>
@@ -541,6 +611,10 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.User", b =>
                 {
+                    b.Navigation("DevelopedGames");
+
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("UserAchievements");
 
                     b.Navigation("UserGames");

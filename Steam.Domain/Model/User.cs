@@ -23,8 +23,10 @@ public class User : BaseEntity
     [Column("password_hash")]
     public string PasswordHash { get; set; } = null!;
 
-    [Column("avatar")]
-    public Media Avatar { get; set; } = null!;
+    [Column("avatar_id")]
+    public int? AvatarId { get; set; }
+    [ForeignKey(nameof(AvatarId))]
+    public Media? Avatar { get; set; }
 
     [Column("description")]
     public string Description { get; set; } = null!;
@@ -32,7 +34,21 @@ public class User : BaseEntity
     [Column("role")]
     public UserRole Role { get; set; }
 
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
+
+    [Column("is_verified")]
+
+    public bool IsVerified { get; set; } = false;
+
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
+      = [];
+
     public ICollection<UserAchievement> UserAchievements { get; set; } = [];
 
     public ICollection<UserGame> UserGames { get; set; } = [];
+
+    public ICollection<Game> DevelopedGames { get; set; } = [];
+
+    public ICollection<UserFrend> Friends { get; set; } = [];
 }

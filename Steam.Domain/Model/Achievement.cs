@@ -13,11 +13,15 @@ public class Achievement : BaseEntity
     public string Name { get; set; }
     [Column("description")]
     public string Description { get; set; }
-    [Column("icon")]
-    public Media Icon { get; set; }
+    [Column("icon_id")]
+    public int? IconId { get; set; }
+    [ForeignKey(nameof(IconId))]
+    public Media? Icon { get; set; }
     [Column("game_id")]
     public int GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
-    
+
+    public ICollection<UserAchievement> UserAchievements { get; set; } = [];
+
 }

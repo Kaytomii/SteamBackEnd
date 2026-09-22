@@ -21,6 +21,7 @@ public class Game : BaseEntity
 
     [Column("price")]
     public decimal Price { get; set; }
+    
     [Column("developer_id")]
     public int DeveloperId { get; set; }
     [ForeignKey("DeveloperId")]
@@ -36,4 +37,8 @@ public class Game : BaseEntity
     public ICollection<GameGenre> GameGenres { get; set; } = [];
 
     public ICollection<SystemRequirements> SystemRequirements { get; set; } = [];
+
+    public ICollection<UserGame> UserGames { get; set; } = [];
+
+    public ICollection<Media> Media { get; set; } = [];
 }

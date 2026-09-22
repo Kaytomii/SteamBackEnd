@@ -64,7 +64,7 @@ namespace Steam.Infrastructure.Migrations
                     username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     password_hash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AvatarId = table.Column<int>(type: "int", nullable: false),
+                    avatar_id = table.Column<int>(type: "int", nullable: true),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     role = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -74,11 +74,11 @@ namespace Steam.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Users_Medias_AvatarId",
-                        column: x => x.AvatarId,
+                        name: "FK_Users_Medias_avatar_id",
+                        column: x => x.avatar_id,
                         principalTable: "Medias",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +103,7 @@ namespace Steam.Infrastructure.Migrations
                         column: x => x.developer_id,
                         principalTable: "Users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,7 +114,7 @@ namespace Steam.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IconId = table.Column<int>(type: "int", nullable: false),
+                    icon_id = table.Column<int>(type: "int", nullable: true),
                     game_id = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -129,11 +129,11 @@ namespace Steam.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Achievements_Medias_IconId",
-                        column: x => x.IconId,
+                        name: "FK_Achievements_Medias_icon_id",
+                        column: x => x.icon_id,
                         principalTable: "Medias",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -270,9 +270,9 @@ namespace Steam.Infrastructure.Migrations
                 column: "game_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Achievements_IconId",
+                name: "IX_Achievements_icon_id",
                 table: "Achievements",
-                column: "IconId");
+                column: "icon_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameGenres_genre_id",
@@ -305,9 +305,9 @@ namespace Steam.Infrastructure.Migrations
                 column: "game_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_AvatarId",
+                name: "IX_Users_avatar_id",
                 table: "Users",
-                column: "AvatarId");
+                column: "avatar_id");
         }
 
         /// <inheritdoc />

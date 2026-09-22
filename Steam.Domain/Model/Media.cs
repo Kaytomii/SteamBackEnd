@@ -1,9 +1,6 @@
 ﻿using Steam.Domain.Enum;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Steam.Domain.Model;
 
@@ -25,4 +22,8 @@ public class Media : BaseEntity
 
     [Column("size")]
     public long Size { get; set; }
+
+    public ICollection<User> AvatarUsers { get; set; } = [];
+
+    public ICollection<Achievement> AchievementIcons { get; set; } = [];
 }

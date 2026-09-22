@@ -21,6 +21,8 @@ namespace Steam.Infrastructure.Data
         public DbSet<GameTag> GameTags { get; set; }
         public DbSet<SystemRequirements> SystemRequirements { get; set; }
         public DbSet<Media> Medias { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<UserFrend> UserFrends { get; set; }
 
 
         public override int SaveChanges()
@@ -55,18 +57,73 @@ namespace Steam.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<GameTag>()
-                .HasKey(x => new { x.GameId, x.TagId });
-            modelBuilder.Entity<GameGenre>()
-                .HasKey(x => new { x.GameId, x.GenreId });
-            modelBuilder.Entity<UserAchievement>()
-                .HasKey(x => new { x.UserId, x.AchievementId });
-            modelBuilder.Entity<UserGame>()
-                .HasKey(x => new { x.UserId, x.GameId });
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasOne(x => x.Avatar)
+                    .WithMany(x => x.AvatarUsers)
+                    .HasForeignKey(x => x.AvatarId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
             modelBuilder.Entity<Game>(entity =>
             {
-                entity.Property(p => p.Price)
-                      .HasColumnType("decimal(18,2)");
+                entity.Property(x => x.Price).HasColumnType("decimal(18,2)");
+                entity.HasOne(x => x.Developer)
+                    .WithMany(x => x.DevelopedGames)
+                    .HasForeignKey(x => x.DeveloperId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Achievement>(entity =>
+            {
+                entity.HasOne(x => x.Game)
+                    .WithMany(x => x.Achievements)
+                    .HasForeignKey(x => x.GameId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(x => x.Icon)
+                    .WithMany(x => x.AchievementIcons)
+                    .HasForeignKey(x => x.IconId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            modelBuilder.Entity<SystemRequirements>()
+                .HasOne(x => x.Game)
+                .WithMany(x => x.SystemRequirements)
+                .HasForeignKey(x => x.GameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GameTag>(entity =>
+            {
+                entity.HasKey(x => new { x.GameId, x.TagId });
+                entity.HasOne(x => x.Game).WithMany(x => x.GameTags).HasForeignKey(x => x.GameId);
+                entity.HasOne(x => x.Tag).WithMany(x => x.GameTags).HasForeignKey(x => x.TagId);
+            });
+
+            modelBuilder.Entity<GameGenre>(entity =>
+            {
+                entity.HasKey(x => new { x.GameId, x.GenreId });
+                entity.HasOne(x => x.Game).WithMany(x => x.GameGenres).HasForeignKey(x => x.GameId);
+                entity.HasOne(x => x.Genre).WithMany(x => x.GameGenres).HasForeignKey(x => x.GenreId);
+            });
+
+            modelBuilder.Entity<UserAchievement>(entity =>
+            {
+                entity.HasKey(x => new { x.UserId, x.AchievementId });
+                entity.HasOne(x => x.User).WithMany(x => x.UserAchievements).HasForeignKey(x => x.UserId);
+                entity.HasOne(x => x.Achievement).WithMany(x => x.UserAchievements).HasForeignKey(x => x.AchievementId);
+            });
+
+            modelBuilder.Entity<UserGame>(entity =>
+            {
+                entity.HasKey(x => new { x.UserId, x.GameId });
+                entity.HasOne(x => x.User).WithMany(x => x.UserGames).HasForeignKey(x => x.UserId);
+                entity.HasOne(x => x.Game).WithMany(x => x.UserGames).HasForeignKey(x => x.GameId);
+            });
+            modelBuilder.Entity<UserFrend>(entity =>
+            {
+                entity.HasKey(x => new { x.UserId, x.FriendId });
+                entity.HasOne(x => x.User).WithMany(x => x.Friends).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(x => x.Friend).WithMany().HasForeignKey(x => x.FriendId).OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

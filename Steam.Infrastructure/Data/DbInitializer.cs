@@ -1,4 +1,5 @@
 ﻿using Steam.Domain.Enum;
+using Steam.Domain.Enum;
 using Steam.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,7 +19,10 @@ public static class DbInitializer
         {
             var admin = new User
             {
+                Username = "admin",
                 Email = "admin@example.com",
+                PasswordHash = "CHANGE_ME",
+                Description = "System administrator",
                 Role = UserRole.Admin
             };
 
