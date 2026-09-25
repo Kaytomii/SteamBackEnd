@@ -50,5 +50,7 @@ public class User : BaseEntity
 
     public ICollection<Game> DevelopedGames { get; set; } = [];
 
-    public ICollection<UserFrend> Friends { get; set; } = [];
+    public ICollection<UserFriend> Friends { get; set; } = [];
+    public ICollection<UserFriend> FriendOf { get; set; } = [];
+    public ICollection<UserProvider> UserProviders { get; set; } = [];
 }

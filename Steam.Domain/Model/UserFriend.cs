@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Steam.Domain.Model;
 
-public class UserFrend
+public class UserFriend
 {
     [Column("user_id")]
     public int UserId { get; set; }

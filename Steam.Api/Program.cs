@@ -11,6 +11,13 @@ namespace Steam.Api
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy => policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
             builder.Services.AddDbContext<SteamDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));

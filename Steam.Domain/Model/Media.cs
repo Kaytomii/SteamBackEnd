@@ -22,7 +22,11 @@ public class Media : BaseEntity
 
     [Column("size")]
     public long Size { get; set; }
+    [Column("game_id")]
+    public int? GameId { get; set; }
 
+    [ForeignKey(nameof(GameId))]
+    public Game? Game { get; set; }
     public ICollection<User> AvatarUsers { get; set; } = [];
 
     public ICollection<Achievement> AchievementIcons { get; set; } = [];
