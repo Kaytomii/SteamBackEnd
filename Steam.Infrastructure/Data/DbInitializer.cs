@@ -1,5 +1,4 @@
 ﻿using Steam.Domain.Enum;
-using Steam.Domain.Enum;
 using Steam.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System;

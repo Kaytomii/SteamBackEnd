@@ -1,40 +1,34 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Steam.Infrastructure.Data;
 
 namespace Steam.Api
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", policy => policy
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
-            });
-            builder.Services.AddDbContext<SteamDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
-            });
+
+            // Add services to the container.
+
+            builder.Services.AddControllers();
+            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddOpenApi();
 
             var app = builder.Build();
-            app.UseCors("AllowAll");
 
-            using (var scope = app.Services.CreateScope())
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                var db = scope.ServiceProvider.GetRequiredService<SteamDbContext>();
-
-                await db.Database.MigrateAsync();
-                await DbInitializer.InitializeAsync(db);
+                app.MapOpenApi();
             }
 
-            await app.RunAsync();
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
+
+            app.MapControllers();
+
+            app.Run();
         }
     }
 }
