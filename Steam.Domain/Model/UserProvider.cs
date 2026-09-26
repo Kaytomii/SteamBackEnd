@@ -15,7 +15,7 @@ public class UserProvider
 
     [Required]
     [Column("user_id")]
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [Required]
     [Column("provider_id")]

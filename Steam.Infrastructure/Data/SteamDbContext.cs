@@ -18,6 +18,7 @@ namespace Steam.Infrastructure.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<GameGenre> GameGenres { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Provider> Providers { get; set; }
         public DbSet<GameTag> GameTags { get; set; }
         public DbSet<SystemRequirements> SystemRequirements { get; set; }
         public DbSet<Media> Medias { get; set; }

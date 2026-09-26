@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Steam.Application.DTOs.GameDTOs;
 
-public class GameCreateDto
+public class GameCreateDTO
 {
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

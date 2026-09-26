@@ -27,7 +27,7 @@ public class RefreshToken
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("user_id")]
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
