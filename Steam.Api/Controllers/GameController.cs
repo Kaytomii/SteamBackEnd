@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steam.Application.DTOs.GameDTOs;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 
 namespace Steam.Api.Controllers;
 
@@ -10,36 +11,37 @@ namespace Steam.Api.Controllers;
 [Route("api/[controller]")]
 public class GameController : ControllerBase
 {
-    private readonly IGameRepository _repo;
-    private readonly IMapper _mapper;
+    private readonly IGameService _service;
 
-    public GameController(IGameRepository repo, IMapper mapper)
+    public GameController(IGameService service)
     {
-        _repo = repo;
-        _mapper = mapper;
-    }
-
-    [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> Create([FromBody] GameCreateDto dto, CancellationToken ct)
-    {
-        var game = _mapper.Map<Steam.Domain.Model.Game>(dto);
-        var id = await _repo.AddAsync(game, ct);
-        return Ok(new { id });
+        _service = service;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        var list = await _repo.GetAllAsync(ct);
-        return Ok(list);
+        return Ok(await _service.GetAllAsync(ct));
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id, CancellationToken ct)
+    public async Task<IActionResult> GetById(int id, CancellationToken ct)
     {
-        var game = await _repo.GetByIdAsync(id, ct);
-        if (game == null) return NotFound();
-        return Ok(game);
+        var game = await _service.GetByIdAsync(id, ct);
+        return game == null ? NotFound() : Ok(game);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] GameCreateDTO dto, CancellationToken ct)
+    {
+        var game = await _service.CreateAsync(dto, ct);
+        return Created($"api/game/{game.Id}", game);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] GameUpdateDTO dto, CancellationToken ct)
+    {
+        var game = await _service.UpdateAsync(id, dto, ct);
+        return game == null ? NotFound() : Ok(game);
     }
 }

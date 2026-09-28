@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steam.Application.DTOs.AchievementDTOs;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 
 namespace Steam.Api.Controllers;
 
@@ -10,28 +11,23 @@ namespace Steam.Api.Controllers;
 [Route("api/[controller]")]
 public class AchievementController : ControllerBase
 {
-    private readonly IAchievementRepository _repo;
-    private readonly IMapper _mapper;
+    private readonly IAchievementService _service;
 
-    public AchievementController(IAchievementRepository repo, IMapper mapper)
+    public AchievementController(IAchievementService service)
     {
-        _repo = repo;
-        _mapper = mapper;
+        _service = service;
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create([FromBody] AchievementCreateDTO dto, CancellationToken ct)
     {
-        var entity = _mapper.Map<Steam.Domain.Model.Achievement>(dto);
-        var id = await _repo.AddAsync(entity, ct);
-        return Ok(new { id });
+        var achievement = await _service.CreateAsync(dto, ct);
+        return Created($"api/achievement/{achievement.Id}", achievement);
     }
 
     [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGame(int gameId, CancellationToken ct)
+    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
     {
-        var list = await _repo.GetByGameIdAsync(gameId, ct);
-        return Ok(list);
+        return Ok(await _service.GetByGameIdAsync(gameId, ct));
     }
 }

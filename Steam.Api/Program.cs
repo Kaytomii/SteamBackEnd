@@ -1,7 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-using Microsoft.OpenApi.Models;
 using Steam.Api.MiddleWares;
 using Steam.Application.Interfaces.Repository;
 using Steam.Application.Interfaces.Services;

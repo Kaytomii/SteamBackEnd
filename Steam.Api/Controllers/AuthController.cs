@@ -1,41 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Steam.Application.DTOs;
+using Steam.Application.DTOs.AuthDTOs;
 using Steam.Application.Interfaces;
+using Steam.Application.Interfaces.Services;
 
 namespace Steam.Api.Controllers;
+
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly IAuthService _auth;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService auth)
     {
-        _authService = authService;
+        _auth = auth;
     }
 
-    [HttpPost("external")]
-    public async Task<IActionResult> External([FromBody] ExternalAuthDTO dto, CancellationToken ct)
+    [HttpPost("external-login")]
+    public async Task<IActionResult> ExternalLogin([FromBody] ExternalAuthDTO dto, CancellationToken ct)
     {
-        var (access, refresh) = await _authService.ExternalLoginAsync(dto, ct);
-        Response.Cookies.Append("refresh_token", refresh, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.UtcNow.AddDays(30)
-        });
-        return Ok(new { access_token = access });
+        var result = await _auth.LoginExternalAsync(dto, ct);
+        return Ok(result);
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(CancellationToken ct)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDTO dto, CancellationToken ct)
     {
-        var refresh = Request.Cookies["refresh_token"];
-        if (string.IsNullOrEmpty(refresh)) return Unauthorized();
-        var newAccess = await _authService.RefreshAsync(refresh, ct);
-        if (newAccess == null) return Unauthorized();
-        return Ok(new { access_token = newAccess });
+        var result = await _auth.RefreshAsync(dto.RefreshToken, ct);
+        return result == null ? Unauthorized() : Ok(result);
     }
 }

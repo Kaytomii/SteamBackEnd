@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steam.Application.DTOs.SystemRequirementsDTOs;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 
 namespace Steam.Api.Controllers;
 
@@ -10,29 +11,24 @@ namespace Steam.Api.Controllers;
 [Route("api/[controller]")]
 public class SystemRequirementsController : ControllerBase
 {
-    private readonly ISystemRequirementsRepository _repo;
-    private readonly IMapper _mapper;
+    private readonly ISystemRequirementsService _service;
 
-    public SystemRequirementsController(ISystemRequirementsRepository repo, IMapper mapper)
+    public SystemRequirementsController(ISystemRequirementsService service)
     {
-        _repo = repo;
-        _mapper = mapper;
+        _service = service;
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create([FromBody] SystemRequirementsCreateDTO dto, CancellationToken ct)
     {
-        var entity = _mapper.Map<Steam.Domain.Model.SystemRequirements>(dto);
-        var id = await _repo.AddAsync(entity, ct);
-        return Ok(new { id });
+        var req = await _service.CreateAsync(dto, ct);
+        return Created($"api/systemrequirements/{req.Id}", req);
     }
 
     [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGame(int gameId, CancellationToken ct)
+    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
     {
-        var req = await _repo.GetByGameIdAsync(gameId, ct);
-        if (req == null) return NotFound();
-        return Ok(req);
+        var req = await _service.GetByGameIdAsync(gameId, ct);
+        return req == null ? NotFound() : Ok(req);
     }
 }

@@ -23,7 +23,7 @@ public class Game : BaseEntity
     public decimal Price { get; set; }
     
     [Column("developer_id")]
-    public int DeveloperId { get; set; }
+    public Guid DeveloperId { get; set; }
     [ForeignKey("DeveloperId")]
     public User Developer { get; set; } = null!;
 

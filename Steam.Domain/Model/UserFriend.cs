@@ -12,7 +12,7 @@ public class UserFriend
     [ForeignKey("UserId")]
     public User User { get; set; } = null!;
     [Column("friend_id")]
-    public int FriendId { get; set; }
+    public Guid FriendId { get; set; }
     [ForeignKey("FriendId")]
     public User Friend { get; set; } = null!;
 }

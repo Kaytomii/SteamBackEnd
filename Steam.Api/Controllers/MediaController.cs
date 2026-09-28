@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steam.Application.DTOs.MediaDTOs;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 
 namespace Steam.Api.Controllers;
 
@@ -10,28 +11,23 @@ namespace Steam.Api.Controllers;
 [Route("api/[controller]")]
 public class MediaController : ControllerBase
 {
-    private readonly IMediaRepository _repo;
-    private readonly IMapper _mapper;
+    private readonly IMediaService _service;
 
-    public MediaController(IMediaRepository repo, IMapper mapper)
+    public MediaController(IMediaService service)
     {
-        _repo = repo;
-        _mapper = mapper;
+        _service = service;
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create([FromBody] MediaCreateDTO dto, CancellationToken ct)
     {
-        var media = _mapper.Map<Steam.Domain.Model.Media>(dto);
-        var id = await _repo.AddAsync(media, ct);
-        return Ok(new { id });
+        var media = await _service.CreateAsync(dto, ct);
+        return Created($"api/media/{media.Id}", media);
     }
 
     [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGame(int gameId, CancellationToken ct)
+    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
     {
-        var list = await _repo.GetByGameIdAsync(gameId, ct);
-        return Ok(list);
+        return Ok(await _service.GetByGameIdAsync(gameId, ct));
     }
 }
