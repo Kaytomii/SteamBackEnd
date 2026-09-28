@@ -25,8 +25,8 @@ public class JWTService : IJWTService
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            new Claim(ClaimTypes.Name, user.Username ?? string.Empty),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
@@ -46,11 +46,10 @@ public class JWTService : IJWTService
 
     public RefreshToken CreateRefreshToken(Guid userId)
     {
-        var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
         return new RefreshToken
         {
             UserId = userId,
-            Token = token,
+            Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
             ExpiresAt = DateTime.UtcNow.AddDays(_settings.RefreshTokenLifetimeDays)
         };
     }

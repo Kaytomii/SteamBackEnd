@@ -1,0 +1,99 @@
+﻿using AutoMapper;
+using Steam.Application.DTOs.GameDTOs;
+using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
+using Steam.Domain.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Steam.Application.Services;
+
+public class GameService : IGameService
+{
+    private readonly IGameRepository _repo;
+    private readonly IGenreRepository _genreRepo;
+    private readonly ITagRepository _tagRepo;
+    private readonly IMapper _mapper;
+
+    public GameService(
+        IGameRepository repo,
+        IGenreRepository genreRepo,
+        ITagRepository tagRepo,
+        IMapper mapper)
+    {
+        _repo = repo;
+        _genreRepo = genreRepo;
+        _tagRepo = tagRepo;
+        _mapper = mapper;
+    }
+
+    public async Task<GameDTO> CreateAsync(GameCreateDTO dto, CancellationToken ct)
+    {
+        var game = new Game
+        {
+            Name = dto.Title,
+            Description = dto.Description,
+            Price = dto.Price,
+            ReleaseDate = DateTime.UtcNow
+        };
+
+        if (dto.GenreIds != null && dto.GenreIds.Any())
+        {
+            var genres = await _genreRepo.GetAllAsync(ct);
+            var selectedGenres = genres.Where(g => dto.GenreIds.Contains(g.Id)).ToList();
+
+            foreach (var genre in selectedGenres)
+            {
+                game.GameGenres.Add(new GameGenre
+                {
+                    GenreId = genre.Id,
+                    Genre = genre
+                });
+            }
+        }
+
+        if (dto.TagIds != null && dto.TagIds.Any())
+        {
+            var tags = await _tagRepo.GetAllAsync(ct);
+            var selectedTags = tags.Where(t => dto.TagIds.Contains(t.Id)).ToList();
+
+            foreach (var tag in selectedTags)
+            {
+                game.GameTags.Add(new GameTag
+                {
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+        }
+
+        await _repo.AddAsync(game, ct);
+
+        return _mapper.Map<GameDTO>(game);
+    }
+
+    public async Task<GameDTO?> UpdateAsync(int id, GameUpdateDTO dto, CancellationToken ct)
+    {
+        var game = await _repo.GetByIdAsync(id, ct);
+        if (game == null)
+            return null;
+
+        _mapper.Map(dto, game);
+        await _repo.UpdateAsync(game, ct);
+
+        return _mapper.Map<GameDTO>(game);
+    }
+
+    public async Task<GameDTO?> GetByIdAsync(int id, CancellationToken ct)
+    {
+        var game = await _repo.GetByIdAsync(id, ct);
+        return game == null ? null : _mapper.Map<GameDTO>(game);
+    }
+
+    public async Task<IEnumerable<GameListItemDTO>> GetAllAsync(CancellationToken ct)
+    {
+        var games = await _repo.GetAllAsync(ct);
+        return _mapper.Map<IEnumerable<GameListItemDTO>>(games);
+    }
+}

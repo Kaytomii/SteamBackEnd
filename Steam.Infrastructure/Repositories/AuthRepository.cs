@@ -43,14 +43,4 @@ public class AuthRepository : IAuthRepository
     {
         return await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token, ct);
     }
-
-    public async Task RemoveRefreshTokenAsync(int id, CancellationToken ct)
-    {
-        var entity = await _context.RefreshTokens.FindAsync(new object[] { id }, ct);
-        if (entity != null)
-        {
-            _context.RefreshTokens.Remove(entity);
-            await _context.SaveChangesAsync(ct);
-        }
-    }
 }

@@ -1,6 +1,7 @@
 ﻿using Steam.Application.DTOs;
-using Steam.Application.Interfaces.Services;
+using Steam.Application.DTOs.AuthDTOs;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 using Steam.Domain.Enum;
 using Steam.Domain.Model;
 using System;
@@ -20,9 +21,10 @@ public class AuthService : IAuthService
         _jwt = jwt;
     }
 
-    public async Task<(string accessToken, string refreshToken)> ExternalLoginAsync(ExternalAuthDTO dto, CancellationToken ct)
+    public async Task<TokenResponseDTO> LoginExternalAsync(ExternalAuthDTO dto, CancellationToken ct)
     {
         var user = await _repo.GetByEmailAsync(dto.Email, ct);
+
         if (user == null)
         {
             user = new User
@@ -32,22 +34,43 @@ public class AuthService : IAuthService
                 Username = dto.Name,
                 Role = UserRole.User
             };
+
             await _repo.AddUserAsync(user, ct);
         }
 
         var access = _jwt.GenerateAccessToken(user);
-        var refreshEntity = _jwt.CreateRefreshToken(user.Id);
-        await _repo.SaveRefreshTokenAsync(refreshEntity, ct);
+        var refresh = _jwt.CreateRefreshToken(user.Id);
 
-        return (access, refreshEntity.Token);
+        await _repo.SaveRefreshTokenAsync(refresh, ct);
+
+        return new TokenResponseDTO
+        {
+            AccessToken = access,
+            RefreshToken = refresh.Token,
+            ExpiresAt = refresh.ExpiresAt
+        };
     }
 
-    public async Task<string?> RefreshAsync(string refreshToken, CancellationToken ct)
+    public async Task<TokenResponseDTO?> RefreshAsync(string refreshToken, CancellationToken ct)
     {
-        var tokenEntity = await _repo.GetRefreshTokenAsync(refreshToken, ct);
-        if (tokenEntity == null || tokenEntity.ExpiresAt < DateTime.UtcNow) return null;
-        var user = await _repo.GetByIdAsync(tokenEntity.UserId, ct);
-        if (user == null) return null;
-        return _jwt.GenerateAccessToken(user);
+        var token = await _repo.GetRefreshTokenAsync(refreshToken, ct);
+        if (token == null || token.ExpiresAt < DateTime.UtcNow)
+            return null;
+
+        var user = await _repo.GetByIdAsync(token.UserId, ct);
+        if (user == null)
+            return null;
+
+        var access = _jwt.GenerateAccessToken(user);
+        var newRefresh = _jwt.CreateRefreshToken(user.Id);
+
+        await _repo.SaveRefreshTokenAsync(newRefresh, ct);
+
+        return new TokenResponseDTO
+        {
+            AccessToken = access,
+            RefreshToken = newRefresh.Token,
+            ExpiresAt = newRefresh.ExpiresAt
+        };
     }
 }

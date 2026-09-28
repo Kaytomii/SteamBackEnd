@@ -17,16 +17,18 @@ public class SteamProfile : Profile
 {
     public SteamProfile()
     {
-        CreateMap<ExternalAuthDTO, User>();
-
         CreateMap<UserCreateDTO, User>();
         CreateMap<User, UserDTO>();
+
         CreateMap<GameCreateDTO, Game>();
+        CreateMap<GameUpdateDTO, Game>();
         CreateMap<Game, GameDTO>();
+        CreateMap<Game, GameListItemDTO>();
 
         CreateMap<Genre, GenreDTO>();
         CreateMap<Tag, TagDTO>();
         CreateMap<Provider, ProviderDTO>();
+
         CreateMap<MediaCreateDTO, Media>();
         CreateMap<Media, MediaDTO>();
 

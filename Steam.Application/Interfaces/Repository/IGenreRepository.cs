@@ -9,4 +9,5 @@ public interface IGenreRepository
 {
     Task<IEnumerable<Genre>> GetAllAsync(CancellationToken ct);
     Task<Genre?> GetByIdAsync(int id, CancellationToken ct);
+    Task<IEnumerable<Genre>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken ct);
 }

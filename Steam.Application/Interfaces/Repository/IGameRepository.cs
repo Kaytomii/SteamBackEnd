@@ -7,7 +7,8 @@ namespace Steam.Application.Interfaces.Repository;
 
 public interface IGameRepository
 {
-    Task<int?> AddAsync(Game game, CancellationToken ct);
     Task<IEnumerable<Game>> GetAllAsync(CancellationToken ct);
     Task<Game?> GetByIdAsync(int id, CancellationToken ct);
+    Task AddAsync(Game game, CancellationToken ct);
+    Task UpdateAsync(Game game, CancellationToken ct);
 }

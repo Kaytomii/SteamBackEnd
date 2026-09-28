@@ -26,4 +26,10 @@ public class GenreRepository : IGenreRepository
     {
         return await _context.Genres.FirstOrDefaultAsync(g => g.Id == id, ct);
     }
+    public async Task<IEnumerable<Genre>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken ct)
+    {
+        return await _context.Genres
+            .Where(g => ids.Contains(g.Id))
+            .ToListAsync(ct);
+    }
 }

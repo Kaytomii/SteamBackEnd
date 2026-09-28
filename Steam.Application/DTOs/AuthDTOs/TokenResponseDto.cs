@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Steam.Application.DTOs.AuthDTOs;
 
-public class TokenResponseDto
+public class TokenResponseDTO
 {
     public string AccessToken { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
