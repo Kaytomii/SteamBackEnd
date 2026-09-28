@@ -1,15 +1,17 @@
-
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+using Steam.Api.MiddleWares;
 using Steam.Application.Interfaces.Repository;
+using Steam.Application.Interfaces.Services;
 using Steam.Application.Mapping;
+using Steam.Application.Services;
 using Steam.Application.Validators;
 using Steam.Infrastructure.Configuration;
 using Steam.Infrastructure.Data;
 using Steam.Infrastructure.Repositories;
 using Steam.Infrastructure.Services;
-using Steam.Application.Interfaces.Services;
-using Steam.Application.Services;
 
 namespace Steam.Api
 {
@@ -23,15 +25,36 @@ namespace Steam.Api
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection"));
             });
-            // Add services to the container.
+
+
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
             builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
 
-            //===============================REPOSITORY===============================
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Steam API",
+                    Version = "v1"
+                });
 
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Description = "Enter JWT token"
+                });
+            });
+
+                //===============================REPOSITORY===============================
+
+                builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<IGenreRepository, GenreRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
@@ -45,6 +68,15 @@ namespace Steam.Api
             //===============================SERVICES===============================
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJWTService, JWTService>();
+
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IGameService, GameService>();
+            builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddScoped<ISystemRequirementsService, SystemRequirementsService>();
+            builder.Services.AddScoped<IAchievementService, AchievementService>();
+            builder.Services.AddScoped<IGenreService, GenreService>();
+            builder.Services.AddScoped<ITagService, TagService>();
+            builder.Services.AddScoped<IProviderService, ProviderService>();
 
 
             builder.Services.AddAutoMapper(_ => { }, typeof(SteamProfile).Assembly);
@@ -70,6 +102,10 @@ namespace Steam.Api
 
 
             app.MapControllers();
+            app.UseMiddleware<RequestTimerMiddleware>();
+            app.UseMiddleware<CancellationTokenHandleMiddleware>();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.Run();
         }
