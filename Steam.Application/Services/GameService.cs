@@ -35,7 +35,8 @@ public class GameService : IGameService
             Name = dto.Title,
             Description = dto.Description,
             Price = dto.Price,
-            ReleaseDate = DateTime.UtcNow
+            ReleaseDate = DateTime.UtcNow,
+            DeveloperId = dto.DeveloperId
         };
 
         if (dto.GenreIds != null && dto.GenreIds.Any())

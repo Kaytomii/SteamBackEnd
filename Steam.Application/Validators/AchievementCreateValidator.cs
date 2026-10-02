@@ -10,7 +10,7 @@ public class AchievementCreateValidator : AbstractValidator<AchievementCreateDTO
 {
     public AchievementCreateValidator()
     {
-        RuleFor(x => x.GameId).GreaterThan(0).WithMessage("GameId должен быть положительным");
+        RuleFor(x => x.GameId).NotEmpty();
         RuleFor(x => x.Title).NotEmpty().WithMessage("Title обязательный");
     }
 }

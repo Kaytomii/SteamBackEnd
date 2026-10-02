@@ -10,7 +10,7 @@ public class SystemRequirementsCreateValidator : AbstractValidator<SystemRequire
 {
     public SystemRequirementsCreateValidator()
     {
-        RuleFor(x => x.GameId).GreaterThan(0).WithMessage("GameId должен быть положительным");
+        RuleFor(x => x.GameId).NotEmpty();
         RuleFor(x => x.Os).NotEmpty().WithMessage("Os обязательный");
     }
 }

@@ -224,7 +224,6 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("FileName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("file_name");
 
@@ -232,7 +231,7 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("game_id");
 
-                    b.Property<long>("Size")
+                    b.Property<long?>("Size")
                         .HasColumnType("bigint")
                         .HasColumnName("size");
 
@@ -245,7 +244,6 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("url");
 

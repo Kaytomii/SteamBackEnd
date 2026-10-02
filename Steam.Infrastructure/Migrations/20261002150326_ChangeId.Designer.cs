@@ -12,8 +12,8 @@ using Steam.Infrastructure.Data;
 namespace Steam.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamDbContext))]
-    [Migration("20260925120822_Friends")]
-    partial class Friends
+    [Migration("20261002150326_ChangeId")]
+    partial class ChangeId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,8 +87,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
-                    b.Property<int>("DeveloperId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("DeveloperId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("developer_id");
 
                     b.Property<string>("Name")
@@ -160,12 +160,57 @@ namespace Steam.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RPG"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Strategy"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Simulation"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Sports"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Puzzle"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Racing"
+                        });
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.Media", b =>
@@ -182,7 +227,6 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("FileName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("file_name");
 
@@ -190,7 +234,7 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("game_id");
 
-                    b.Property<long>("Size")
+                    b.Property<long?>("Size")
                         .HasColumnType("bigint")
                         .HasColumnName("size");
 
@@ -203,7 +247,6 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("url");
 
@@ -212,6 +255,46 @@ namespace Steam.Infrastructure.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("Medias");
+                });
+
+            modelBuilder.Entity("Steam.Domain.Model.Provider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Providers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Google"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Facebook"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Apple"
+                        });
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.RefreshToken", b =>
@@ -240,8 +323,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("token");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -332,22 +415,65 @@ namespace Steam.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Multiplayer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Singleplayer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Co-op"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Open World"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Story Rich"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Indie"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "VR"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Early Access"
+                        });
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AvatarId")
                         .HasColumnType("int")
@@ -408,8 +534,8 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.UserAchievement", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.Property<int>("AchievementId")
@@ -429,19 +555,19 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.UserFriend", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("FriendId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("FriendId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("friend_id");
 
                     b.HasKey("UserId", "FriendId");
 
                     b.HasIndex("FriendId");
 
-                    b.ToTable("UserFrends", t =>
+                    b.ToTable("UserFriends", t =>
                         {
                             t.HasCheckConstraint("CK_UserFrends_NoSelfFriendship", "[user_id] <> [friend_id]");
                         });
@@ -449,8 +575,8 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.UserGame", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.Property<int>("GameId")
@@ -470,6 +596,44 @@ namespace Steam.Infrastructure.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("UserGames");
+                });
+
+            modelBuilder.Entity("Steam.Domain.Model.UserProvider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("NumberProvider")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("number_provider");
+
+                    b.Property<int>("ProviderId")
+                        .HasColumnType("int")
+                        .HasColumnName("provider_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderId", "NumberProvider")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "ProviderId")
+                        .IsUnique();
+
+                    b.ToTable("UserProviders");
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.Achievement", b =>
@@ -638,6 +802,25 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Steam.Domain.Model.UserProvider", b =>
+                {
+                    b.HasOne("Steam.Domain.Model.Provider", "Provider")
+                        .WithMany("UserProviders")
+                        .HasForeignKey("ProviderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Steam.Domain.Model.User", "User")
+                        .WithMany("UserProviders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provider");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Steam.Domain.Model.Achievement", b =>
                 {
                     b.Navigation("UserAchievements");
@@ -670,6 +853,11 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("AvatarUsers");
                 });
 
+            modelBuilder.Entity("Steam.Domain.Model.Provider", b =>
+                {
+                    b.Navigation("UserProviders");
+                });
+
             modelBuilder.Entity("Steam.Domain.Model.Tag", b =>
                 {
                     b.Navigation("GameTags");
@@ -688,6 +876,8 @@ namespace Steam.Infrastructure.Migrations
                     b.Navigation("UserAchievements");
 
                     b.Navigation("UserGames");
+
+                    b.Navigation("UserProviders");
                 });
 #pragma warning restore 612, 618
         }

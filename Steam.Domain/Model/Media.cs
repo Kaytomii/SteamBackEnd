@@ -12,16 +12,16 @@ public class Media : BaseEntity
     public int Id { get; set; }
 
     [Column("url")]
-    public string Url { get; set; } = null!;
+    public string? Url { get; set; } = null!;
 
     [Column("type")]
     public MediaType Type { get; set; }
 
     [Column("file_name")]
-    public string FileName { get; set; } = null!;
+    public string? FileName { get; set; } = null!;
 
     [Column("size")]
-    public long Size { get; set; }
+    public long? Size { get; set; }
     [Column("game_id")]
     public int? GameId { get; set; }
 

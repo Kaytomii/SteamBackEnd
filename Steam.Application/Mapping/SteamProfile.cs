@@ -22,8 +22,11 @@ public class SteamProfile : Profile
 
         CreateMap<GameCreateDTO, Game>();
         CreateMap<GameUpdateDTO, Game>();
-        CreateMap<Game, GameDTO>();
-        CreateMap<Game, GameListItemDTO>();
+        CreateMap<Game, GameDTO>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<Game, GameListItemDTO>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name));
 
         CreateMap<Genre, GenreDTO>();
         CreateMap<Tag, TagDTO>();

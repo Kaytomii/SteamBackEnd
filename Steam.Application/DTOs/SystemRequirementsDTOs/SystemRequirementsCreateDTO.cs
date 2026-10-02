@@ -6,7 +6,7 @@ namespace Steam.Application.DTOs.SystemRequirementsDTOs;
 
 public class SystemRequirementsCreateDTO
 {
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     public string Os { get; set; } = string.Empty;
     public string Cpu { get; set; } = string.Empty;
     public string Gpu { get; set; } = string.Empty;

@@ -10,7 +10,7 @@ public class MediaCreateValidator : AbstractValidator<MediaCreateDTO>
 {
     public MediaCreateValidator()
     {
-        RuleFor(x => x.GameId).GreaterThan(0).WithMessage("GameId должен быть положительным");
+        RuleFor(x => x.GameId).NotEmpty();
         RuleFor(x => x.Url).NotEmpty().WithMessage("Url обязательный");
         RuleFor(x => x.Type).NotEmpty().WithMessage("Type обязательный");
     }
