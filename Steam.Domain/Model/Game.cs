@@ -39,6 +39,7 @@ public class Game : BaseEntity
     public ICollection<SystemRequirements> SystemRequirements { get; set; } = [];
 
     public ICollection<UserGame> UserGames { get; set; } = [];
+    public ICollection<UserWishlist> UserWishlists { get; set; } = [];
 
     public ICollection<Media> Media { get; set; } = [];
 }

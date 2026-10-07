@@ -45,6 +45,7 @@ public class User : BaseEntity
       = [];
 
     public ICollection<UserAchievement> UserAchievements { get; set; } = [];
+    public ICollection<UserWishlist> UserWishlist { get; set; } = [];
 
     public ICollection<UserGame> UserGames { get; set; } = [];
 

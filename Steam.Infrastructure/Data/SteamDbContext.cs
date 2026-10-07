@@ -25,6 +25,7 @@ namespace Steam.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<UserProvider> UserProviders { get; set; }
+        public DbSet<UserWishlist> UserWishlists { get; set; }
 
 
         public override int SaveChanges()
@@ -191,6 +192,20 @@ namespace Steam.Infrastructure.Data
                 entity.HasOne(x => x.User).WithMany(x => x.Friends).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Friend).WithMany(x => x.FriendOf).HasForeignKey(x => x.FriendId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasCheckConstraint("CK_UserFrends_NoSelfFriendship", "[user_id] <> [friend_id]");
+            });
+            modelBuilder.Entity<UserWishlist>(entity =>
+            {
+                entity.HasKey(x => new { x.UserId, x.GameId });
+
+                entity.HasOne(x => x.User)
+                    .WithMany(x => x.UserWishlist)
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Game)
+                    .WithMany(x => x.UserWishlists)
+                    .HasForeignKey(x => x.GameId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
