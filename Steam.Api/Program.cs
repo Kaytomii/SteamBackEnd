@@ -63,11 +63,13 @@ namespace Steam.Api
             builder.Services.AddScoped<IMediaRepository, MediaRepository>();
             builder.Services.AddScoped<ISystemRequirementsRepository, SystemRequirementsRepository>();
             builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+            builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 
             //===============================SERVICES===============================
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJWTService, JWTService>();
-
+            builder.Services.AddScoped<IWishlistService, WishlistService>();
+            builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<IMediaService, MediaService>();
@@ -76,7 +78,7 @@ namespace Steam.Api
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IProviderService, ProviderService>();
-
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
 
             builder.Services.AddAutoMapper(_ => { }, typeof(SteamProfile).Assembly);
             builder.Services.AddValidatorsFromAssemblyContaining<GameCreateValidator>();

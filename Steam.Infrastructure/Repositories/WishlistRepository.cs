@@ -10,11 +10,11 @@ using System.Text;
 
 namespace Steam.Infrastructure.Repositories;
 
-public class WhishlistRepository : IWishlistRepository
+public class WishlistRepository : IWishlistRepository
 {
     private readonly SteamDbContext _context;
 
-    public WhishlistRepository(SteamDbContext context)
+    public WishlistRepository(SteamDbContext context)
     {
         _context = context;
     }
@@ -22,12 +22,13 @@ public class WhishlistRepository : IWishlistRepository
     {
         return await _context.UserWishlists
             .Where(w => w.UserId == userId)
+            .Include(w => w.Game)
             .ToListAsync();
     }
-
     public async Task<UserWishlist?> GetAsync(Guid userId, int gameId)
     {
         return await _context.UserWishlists
+            .Include(w => w.Game)
             .FirstOrDefaultAsync(w => w.UserId == userId && w.GameId == gameId);
     }
     public async Task AddAsync(UserWishlist wishlist)
