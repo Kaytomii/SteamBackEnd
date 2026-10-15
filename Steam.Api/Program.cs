@@ -78,7 +78,8 @@ namespace Steam.Api
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IProviderService, ProviderService>();
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 
             builder.Services.AddAutoMapper(_ => { }, typeof(SteamProfile).Assembly);
             builder.Services.AddValidatorsFromAssemblyContaining<GameCreateValidator>();
@@ -100,7 +101,7 @@ namespace Steam.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
             app.UseMiddleware<RequestTimerMiddleware>();

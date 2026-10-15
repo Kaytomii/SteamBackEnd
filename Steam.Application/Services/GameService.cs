@@ -39,35 +39,19 @@ public class GameService : IGameService
             DeveloperId = dto.DeveloperId
         };
 
-        if (dto.GenreIds != null && dto.GenreIds.Any())
+        foreach (var item in dto.Media)
         {
-            var genres = await _genreRepo.GetAllAsync(ct);
-            var selectedGenres = genres.Where(g => dto.GenreIds.Contains(g.Id)).ToList();
-
-            foreach (var genre in selectedGenres)
+            game.Media.Add(new Media
             {
-                game.GameGenres.Add(new GameGenre
-                {
-                    GenreId = genre.Id,
-                    Genre = genre
-                });
-            }
+                Url = item.Url,
+                Type = item.Type,
+                FileName = item.FileName,
+                Size = item.Size
+            });
         }
 
-        if (dto.TagIds != null && dto.TagIds.Any())
-        {
-            var tags = await _tagRepo.GetAllAsync(ct);
-            var selectedTags = tags.Where(t => dto.TagIds.Contains(t.Id)).ToList();
-
-            foreach (var tag in selectedTags)
-            {
-                game.GameTags.Add(new GameTag
-                {
-                    TagId = tag.Id,
-                    Tag = tag
-                });
-            }
-        }
+        // Здесь же формируются GameGenres, GameTags,
+        // SystemRequirements и Achievements.
 
         await _repo.AddAsync(game, ct);
 

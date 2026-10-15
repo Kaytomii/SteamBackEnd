@@ -12,4 +12,7 @@ public class GameCreateDTO
     public Guid DeveloperId { get; set; }
     public IEnumerable<int> GenreIds { get; set; } = Array.Empty<int>();
     public IEnumerable<int> TagIds { get; set; } = Array.Empty<int>();
+    public List<GameAchievementCreateDTO> Achievements { get; set; } = [];
+    public List<GameSystemRequirementCreateDTO> SystemRequirements { get; set; } = [];
+    public List<GameMediaCreateDTO> Media { get; set; } = [];
 }

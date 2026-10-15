@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Steam.Api.Models;
 using Steam.Application.DTOs.GameDTOs;
 using Steam.Application.Interfaces.Repository;
 using Steam.Application.Interfaces.Services;
@@ -32,10 +33,20 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] GameCreateDTO dto, CancellationToken ct)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Create(
+    [FromForm] GameCreateForm form,
+    CancellationToken ct)
     {
-        var game = await _service.CreateAsync(dto, ct);
-        return Created($"api/game/{game.Id}", game);
+        // 1. Проверить форму и количество файлов.
+        // 2. Десериализовать GenreIds, TagIds,
+        //    SystemRequirements и Achievements из JSON.
+        // 3. Сохранить файлы через IFileStorageService.
+        // 4. Сформировать GameCreateDTO со списком Media.
+        // 5. Вызвать _service.CreateAsync(dto, ct).
+
+        // После успешного создания:
+        // return Created(...);
     }
 
     [HttpPut("{id:int}")]
