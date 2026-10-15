@@ -14,14 +14,14 @@ public class SystemRequirementsRepository : ISystemRequirementsRepository
 
     public SystemRequirementsRepository(SteamDbContext context) => _context = context;
 
-    public async Task<int?> AddAsync(SystemRequirements req, CancellationToken ct)
+    public async Task<Guid?> AddAsync(SystemRequirements req, CancellationToken ct)
     {
         await _context.SystemRequirements.AddAsync(req, ct);
         await _context.SaveChangesAsync(ct);
         return req.Id;
     }
 
-    public async Task<SystemRequirements?> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<SystemRequirements?> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         return await _context.SystemRequirements.FirstOrDefaultAsync(r => r.GameId == gameId, ct);
     }

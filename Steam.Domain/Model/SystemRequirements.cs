@@ -9,25 +9,25 @@ public class SystemRequirements : BaseEntity
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     [Column("game_id")]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
     [Column("type")]
     public SystemRequirementsType Type { get; set; }
     [Column("os")]
-    public string OS { get; set; }
+    public string? OS { get; set; }
     [Column("processor")]
-    public string Processor { get; set; }
+    public string? Processor { get; set; }
     [Column("memory")]
-    public string Memory { get; set; }
+    public string? Memory { get; set; }
     [Column("graphics")]
-    public string Graphics { get; set; }
+    public string? Graphics { get; set; }
     [Column("directx")]
-    public string DirectX { get; set; }
+    public string? DirectX { get; set; }
     [Column("storage")]
-    public string Storage { get; set; }
+    public string? Storage { get; set; }
     [Column("additional_notes")]
-    public string AdditionalNotes { get; set; }
+    public string? AdditionalNotes { get; set; }
 }

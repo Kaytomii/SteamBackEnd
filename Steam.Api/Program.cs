@@ -98,7 +98,7 @@ namespace Steam.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
             app.UseMiddleware<RequestTimerMiddleware>();

@@ -74,7 +74,7 @@ public class GameService : IGameService
         return _mapper.Map<GameDTO>(game);
     }
 
-    public async Task<GameDTO?> UpdateAsync(int id, GameUpdateDTO dto, CancellationToken ct)
+    public async Task<GameDTO?> UpdateAsync(Guid id, GameUpdateDTO dto, CancellationToken ct)
     {
         var game = await _repo.GetByIdAsync(id, ct);
         if (game == null)
@@ -86,7 +86,7 @@ public class GameService : IGameService
         return _mapper.Map<GameDTO>(game);
     }
 
-    public async Task<GameDTO?> GetByIdAsync(int id, CancellationToken ct)
+    public async Task<GameDTO?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var game = await _repo.GetByIdAsync(id, ct);
         return game == null ? null : _mapper.Map<GameDTO>(game);

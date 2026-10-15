@@ -9,7 +9,7 @@ public class UserAchievement
     [ForeignKey("UserId")]
     public User User { get; set; } = null!;
     [Column("achievement_id")]
-    public int AchievementId { get; set; }
+    public Guid AchievementId { get; set; }
     [ForeignKey("AchievementId")]
     public Achievement Achievement { get; set; } = null!;
     [Column("unlocked_at")]

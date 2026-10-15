@@ -8,5 +8,5 @@ namespace Steam.Application.Interfaces.Services;
 public interface IAchievementService
 {
     Task<AchievementDTO> CreateAsync(AchievementCreateDTO dto, CancellationToken ct);
-    Task<IEnumerable<AchievementDTO>> GetByGameIdAsync(int gameId, CancellationToken ct);
+    Task<IEnumerable<AchievementDTO>> GetByGameIdAsync(Guid gameId, CancellationToken ct);
 }

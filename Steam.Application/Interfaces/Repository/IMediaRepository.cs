@@ -8,6 +8,6 @@ namespace Steam.Application.Interfaces.Repository;
 public interface IMediaRepository
 {
     Task<int?> AddAsync(Media media, CancellationToken ct);
-    Task<IEnumerable<Media>> GetByGameIdAsync(int gameId, CancellationToken ct);
+    Task<IEnumerable<Media>> GetByGameIdAsync(Guid gameId, CancellationToken ct);
     Task<Media?> GetByIdAsync(int id, CancellationToken ct);
 }

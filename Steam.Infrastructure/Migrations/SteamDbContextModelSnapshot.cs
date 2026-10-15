@@ -17,19 +17,17 @@ namespace Steam.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Steam.Domain.Model.Achievement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -40,8 +38,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<int?>("IconId")
@@ -68,12 +66,10 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.Game", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -114,8 +110,8 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.GameGenre", b =>
                 {
-                    b.Property<int>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<int>("GenreId")
@@ -131,8 +127,8 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.GameTag", b =>
                 {
-                    b.Property<int>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<int>("TagId")
@@ -149,11 +145,8 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.Genre", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -227,8 +220,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("file_name");
 
-                    b.Property<int?>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid?>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<long?>("Size")
@@ -257,11 +250,8 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.Provider", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -336,15 +326,12 @@ namespace Steam.Infrastructure.Migrations
 
             modelBuilder.Entity("Steam.Domain.Model.SystemRequirements", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("AdditionalNotes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("additional_notes");
 
@@ -353,36 +340,30 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("DirectX")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("directx");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<string>("Graphics")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("graphics");
 
                     b.Property<string>("Memory")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("memory");
 
                     b.Property<string>("OS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("os");
 
                     b.Property<string>("Processor")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("processor");
 
                     b.Property<string>("Storage")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("storage");
 
@@ -404,11 +385,8 @@ namespace Steam.Infrastructure.Migrations
             modelBuilder.Entity("Steam.Domain.Model.Tag", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -535,8 +513,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("AchievementId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("AchievementId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("achievement_id");
 
                     b.Property<DateTime>("UnlockedAt")
@@ -576,8 +554,8 @@ namespace Steam.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("game_id");
 
                     b.Property<int>("Playtime")
@@ -631,6 +609,23 @@ namespace Steam.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("UserProviders");
+                });
+
+            modelBuilder.Entity("Steam.Domain.Model.UserWishlist", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("game_id");
+
+                    b.HasKey("UserId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("UserWishlists");
                 });
 
             modelBuilder.Entity("Steam.Domain.Model.Achievement", b =>
@@ -814,6 +809,25 @@ namespace Steam.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Provider");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Steam.Domain.Model.UserWishlist", b =>
+                {
+                    b.HasOne("Steam.Domain.Model.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steam.Domain.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
 
                     b.Navigation("User");
                 });

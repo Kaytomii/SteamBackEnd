@@ -25,8 +25,8 @@ public class MediaController : ControllerBase
         return Created($"api/media/{media.Id}", media);
     }
 
-    [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
+    [HttpGet("game/{gameId:guid}")]
+    public async Task<IActionResult> GetByGameId(Guid gameId, CancellationToken ct)
     {
         return Ok(await _service.GetByGameIdAsync(gameId, ct));
     }

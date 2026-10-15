@@ -8,7 +8,7 @@ namespace Steam.Domain.Model;
 public class GameGenre
 {
     [Column("game_id")]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
     [Column("genre_id")]

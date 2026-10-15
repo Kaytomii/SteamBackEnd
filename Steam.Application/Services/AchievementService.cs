@@ -27,7 +27,7 @@ public class AchievementService : IAchievementService
         return _mapper.Map<AchievementDTO>(achievement);
     }
 
-    public async Task<IEnumerable<AchievementDTO>> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<IEnumerable<AchievementDTO>> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         var achievements = await _repo.GetByGameIdAsync(gameId, ct);
         return _mapper.Map<IEnumerable<AchievementDTO>>(achievements);

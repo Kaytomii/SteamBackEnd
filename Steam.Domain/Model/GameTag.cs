@@ -7,7 +7,7 @@ public class GameTag
 {
 
     [Column("game_id")]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
     [Column("tag_id")]

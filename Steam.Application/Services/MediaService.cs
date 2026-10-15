@@ -27,7 +27,7 @@ public class MediaService : IMediaService
         return _mapper.Map<MediaDTO>(media);
     }
 
-    public async Task<IEnumerable<MediaDTO>> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<IEnumerable<MediaDTO>> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         var media = await _repo.GetByGameIdAsync(gameId, ct);
         return _mapper.Map<IEnumerable<MediaDTO>>(media);

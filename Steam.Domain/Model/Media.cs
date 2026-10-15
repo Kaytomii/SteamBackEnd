@@ -23,7 +23,7 @@ public class Media : BaseEntity
     [Column("size")]
     public long? Size { get; set; }
     [Column("game_id")]
-    public int? GameId { get; set; }
+    public Guid? GameId { get; set; }
 
     [ForeignKey(nameof(GameId))]
     public Game? Game { get; set; }

@@ -25,6 +25,7 @@ namespace Steam.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<UserProvider> UserProviders { get; set; }
+        public DbSet<UserWishlist> UserWishlists { get; set; }
 
 
         public override int SaveChanges()
@@ -85,6 +86,7 @@ namespace Steam.Infrastructure.Data
             });
             modelBuilder.Entity<Genre>(entity =>
             {
+                entity.Property(g => g.Id).ValueGeneratedNever();
                 entity.HasIndex(genre => genre.Name).IsUnique();
                 entity.HasData(
                     new Genre { Id = 1, Name = "Action" },
@@ -98,6 +100,7 @@ namespace Steam.Infrastructure.Data
             });
             modelBuilder.Entity<Tag>(entity =>
             {
+                entity.Property(t => t.Id).ValueGeneratedNever();
                 entity.HasIndex(tag => tag.Name).IsUnique();
                 entity.HasData(
                     new Tag { Id = 1, Name = "Multiplayer" },
@@ -111,6 +114,7 @@ namespace Steam.Infrastructure.Data
             });
             modelBuilder.Entity<Provider>(entity =>
             {
+                entity.Property(p => p.Id).ValueGeneratedNever();
                 entity.HasIndex(provider => provider.Name).IsUnique();
                 entity.HasData(
                     new Provider { Id = 1, Name = "Google" },
@@ -190,8 +194,10 @@ namespace Steam.Infrastructure.Data
                 entity.HasKey(x => new { x.UserId, x.FriendId });
                 entity.HasOne(x => x.User).WithMany(x => x.Friends).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(x => x.Friend).WithMany(x => x.FriendOf).HasForeignKey(x => x.FriendId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasCheckConstraint("CK_UserFrends_NoSelfFriendship", "[user_id] <> [friend_id]");
+                entity.ToTable(tb => tb.HasCheckConstraint("CK_UserFrends_NoSelfFriendship", "[user_id] <> [friend_id]"));
             });
+            modelBuilder.Entity<UserWishlist>()
+                .HasKey(x => new { x.UserId, x.GameId });
         }
     }
 }

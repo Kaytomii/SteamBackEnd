@@ -8,7 +8,7 @@ public class Achievement : BaseEntity
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     [Column("name")]
     public string Name { get; set; }
     [Column("description")]
@@ -18,7 +18,7 @@ public class Achievement : BaseEntity
     [ForeignKey(nameof(IconId))]
     public Media? Icon { get; set; }
     [Column("game_id")]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
 

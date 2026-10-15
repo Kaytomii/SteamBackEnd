@@ -24,8 +24,8 @@ public class GameController : ControllerBase
         return Ok(await _service.GetAllAsync(ct));
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken ct)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var game = await _service.GetByIdAsync(id, ct);
         return game == null ? NotFound() : Ok(game);
@@ -38,8 +38,8 @@ public class GameController : ControllerBase
         return Created($"api/game/{game.Id}", game);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] GameUpdateDTO dto, CancellationToken ct)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] GameUpdateDTO dto, CancellationToken ct)
     {
         var game = await _service.UpdateAsync(id, dto, ct);
         return game == null ? NotFound() : Ok(game);

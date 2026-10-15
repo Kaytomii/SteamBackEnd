@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Steam.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeId : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "Genres",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<int>(type: "int", nullable: false),
                     name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -30,8 +29,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "Providers",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<int>(type: "int", nullable: false),
                     name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -43,8 +41,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<int>(type: "int", nullable: false),
                     name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -56,12 +53,11 @@ namespace Steam.Infrastructure.Migrations
                 name: "Achievements",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     icon_id = table.Column<int>(type: "int", nullable: true),
-                    game_id = table.Column<int>(type: "int", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -74,7 +70,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "GameGenres",
                 columns: table => new
                 {
-                    game_id = table.Column<int>(type: "int", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     genre_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -92,8 +88,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -111,7 +106,7 @@ namespace Steam.Infrastructure.Migrations
                 name: "GameTags",
                 columns: table => new
                 {
-                    game_id = table.Column<int>(type: "int", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     tag_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -141,7 +136,7 @@ namespace Steam.Infrastructure.Migrations
                     type = table.Column<int>(type: "int", nullable: false),
                     file_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: true),
-                    game_id = table.Column<int>(type: "int", nullable: true),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -160,17 +155,16 @@ namespace Steam.Infrastructure.Migrations
                 name: "SystemRequirements",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    game_id = table.Column<int>(type: "int", nullable: false),
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     type = table.Column<int>(type: "int", nullable: false),
-                    os = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    processor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    memory = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    graphics = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    directx = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    storage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    additional_notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    os = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    processor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    memory = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    graphics = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    directx = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    storage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    additional_notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -240,7 +234,7 @@ namespace Steam.Infrastructure.Migrations
                 columns: table => new
                 {
                     user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    achievement_id = table.Column<int>(type: "int", nullable: false),
+                    achievement_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     unlocked_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -290,7 +284,7 @@ namespace Steam.Infrastructure.Migrations
                 columns: table => new
                 {
                     user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    game_id = table.Column<int>(type: "int", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     purchased_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     playtime = table.Column<int>(type: "int", nullable: false)
                 },
@@ -333,6 +327,30 @@ namespace Steam.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserProviders_Users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "Users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserWishlists",
+                columns: table => new
+                {
+                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    game_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserWishlists", x => new { x.user_id, x.game_id });
+                    table.ForeignKey(
+                        name: "FK_UserWishlists_Games_game_id",
+                        column: x => x.game_id,
+                        principalTable: "Games",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserWishlists_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id",
@@ -487,6 +505,11 @@ namespace Steam.Infrastructure.Migrations
                 column: "username",
                 unique: true);
 
+            migrationBuilder.CreateIndex(
+                name: "IX_UserWishlists_game_id",
+                table: "UserWishlists",
+                column: "game_id");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Achievements_Games_game_id",
                 table: "Achievements",
@@ -550,6 +573,9 @@ namespace Steam.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserProviders");
+
+            migrationBuilder.DropTable(
+                name: "UserWishlists");
 
             migrationBuilder.DropTable(
                 name: "Genres");

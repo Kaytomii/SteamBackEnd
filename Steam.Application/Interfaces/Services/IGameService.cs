@@ -8,7 +8,7 @@ namespace Steam.Application.Interfaces.Services;
 public interface IGameService
 {
     Task<GameDTO> CreateAsync(GameCreateDTO dto, CancellationToken ct);
-    Task<GameDTO?> UpdateAsync(int id, GameUpdateDTO dto, CancellationToken ct);
-    Task<GameDTO?> GetByIdAsync(int id, CancellationToken ct);
+    Task<GameDTO?> UpdateAsync(Guid id, GameUpdateDTO dto, CancellationToken ct);
+    Task<GameDTO?> GetByIdAsync(Guid id, CancellationToken ct);
     Task<IEnumerable<GameListItemDTO>> GetAllAsync(CancellationToken ct);
 }

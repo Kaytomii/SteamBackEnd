@@ -14,19 +14,19 @@ public class AchievementRepository : IAchievementRepository
 
     public AchievementRepository(SteamDbContext context) => _context = context;
 
-    public async Task<int?> AddAsync(Achievement achievement, CancellationToken ct)
+    public async Task<Guid?> AddAsync(Achievement achievement, CancellationToken ct)
     {
         await _context.Achievements.AddAsync(achievement, ct);
         await _context.SaveChangesAsync(ct);
         return achievement.Id;
     }
 
-    public async Task<IEnumerable<Achievement>> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<IEnumerable<Achievement>> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         return await _context.Achievements.AsNoTracking().Where(a => a.GameId == gameId).ToListAsync(ct);
     }
 
-    public async Task<Achievement?> GetByIdAsync(int id, CancellationToken ct)
+    public async Task<Achievement?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         return await _context.Achievements.FirstOrDefaultAsync(a => a.Id == id, ct);
     }

@@ -25,8 +25,8 @@ public class AchievementController : ControllerBase
         return Created($"api/achievement/{achievement.Id}", achievement);
     }
 
-    [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
+    [HttpGet("game/{gameId:guid}")]
+    public async Task<IActionResult> GetByGameId(Guid gameId, CancellationToken ct)
     {
         return Ok(await _service.GetByGameIdAsync(gameId, ct));
     }

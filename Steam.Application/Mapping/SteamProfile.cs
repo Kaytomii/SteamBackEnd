@@ -38,7 +38,9 @@ public class SteamProfile : Profile
         CreateMap<SystemRequirementsCreateDTO, SystemRequirements>();
         CreateMap<SystemRequirements, SystemRequirementsDTO>();
 
-        CreateMap<AchievementCreateDTO, Achievement>();
-        CreateMap<Achievement, AchievementDTO>();
+        CreateMap<AchievementCreateDTO, Achievement>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
+        CreateMap<Achievement, AchievementDTO>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name));
     }
 }

@@ -21,7 +21,7 @@ public class MediaRepository : IMediaRepository
         return media.Id;
     }
 
-    public async Task<IEnumerable<Media>> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<IEnumerable<Media>> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         return await _context.Medias.AsNoTracking().Where(m => m.GameId == gameId).ToListAsync(ct);
     }

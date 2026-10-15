@@ -27,7 +27,7 @@ public class SystemRequirementsService : ISystemRequirementsService
         return _mapper.Map<SystemRequirementsDTO>(req);
     }
 
-    public async Task<SystemRequirementsDTO?> GetByGameIdAsync(int gameId, CancellationToken ct)
+    public async Task<SystemRequirementsDTO?> GetByGameIdAsync(Guid gameId, CancellationToken ct)
     {
         var req = await _repo.GetByGameIdAsync(gameId, ct);
         return req == null ? null : _mapper.Map<SystemRequirementsDTO>(req);

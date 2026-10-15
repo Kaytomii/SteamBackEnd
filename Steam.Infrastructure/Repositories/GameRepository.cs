@@ -26,7 +26,7 @@ public class GameRepository : IGameRepository
             .ToListAsync(ct);
     }
 
-    public async Task<Game?> GetByIdAsync(int id, CancellationToken ct)
+    public async Task<Game?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         return await _context.Games
             .Include(g => g.GameGenres)

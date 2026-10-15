@@ -7,6 +7,6 @@ namespace Steam.Application.Interfaces.Repository;
 
 public interface ISystemRequirementsRepository
 {
-    Task<int?> AddAsync(SystemRequirements req, CancellationToken ct);
-    Task<SystemRequirements?> GetByGameIdAsync(int gameId, CancellationToken ct);
+    Task<Guid?> AddAsync(SystemRequirements req, CancellationToken ct);
+    Task<SystemRequirements?> GetByGameIdAsync(Guid gameId, CancellationToken ct);
 }

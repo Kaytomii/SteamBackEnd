@@ -25,8 +25,8 @@ public class SystemRequirementsController : ControllerBase
         return Created($"api/systemrequirements/{req.Id}", req);
     }
 
-    [HttpGet("game/{gameId:int}")]
-    public async Task<IActionResult> GetByGameId(int gameId, CancellationToken ct)
+    [HttpGet("game/{gameId:guid}")]
+    public async Task<IActionResult> GetByGameId(Guid gameId, CancellationToken ct)
     {
         var req = await _service.GetByGameIdAsync(gameId, ct);
         return req == null ? NotFound() : Ok(req);

@@ -12,7 +12,7 @@ public class UserGame
     [ForeignKey("UserId")]
     public User User { get; set; } = null!;
     [Column("game_id")]
-    public int GameId { get; set; }
+    public Guid GameId { get; set; }
     [ForeignKey("GameId")]
     public Game Game { get; set; } = null!;
     [Column("purchased_at")]

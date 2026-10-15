@@ -8,5 +8,5 @@ namespace Steam.Application.Interfaces.Services;
 public interface IMediaService
 {
     Task<MediaDTO> CreateAsync(MediaCreateDTO dto, CancellationToken ct);
-    Task<IEnumerable<MediaDTO>> GetByGameIdAsync(int gameId, CancellationToken ct);
+    Task<IEnumerable<MediaDTO>> GetByGameIdAsync(Guid gameId, CancellationToken ct);
 }
